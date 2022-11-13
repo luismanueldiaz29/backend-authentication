@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  backend-authentication:
+    container_name: backend-authentication
+    image: backend-authentication
+    build: .
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres-authentication
+    environment:
+      PORT: ${PORT}
+      JDBC_URL: ${JDBC_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      IDLE_TIMEOUT: ${IDLE_TIMEOUT}
+      JWK_PRIMARY: ${JWK_PRIMARY}
+      JWK_SECONDARY: ${JWK_SECONDARY}
+      KID: ${KID}
+      KID2: ${KID2}
+      JWT_EXPIRATIONS_SECONDS: ${JWT_EXPIRATIONS_SECONDS}
+      JWT_EXPIRATIONS_REFRESH_HOURS: ${JWT_EXPIRATIONS_REFRESH_HOURS}
+
+  postgres-authentication:
+    container_name: postgres-authentication
+    image: postgres:14.4-alpine
+    volumes:
+      - ${DB_VOLUME_DIR}:/var/lib/postgresql/
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"

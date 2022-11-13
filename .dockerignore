@@ -1,0 +1,10 @@
+.idea
+.gradle
+.vscode
+.scannerwork
+.bin
+.build
+README.md
+docker-compose.yml
+Dockerfile
+.env
