@@ -1,0 +1,7 @@
+micronaut:
+  application:
+    name: authentication-backend
+netty:
+  default:
+    allocator:
+      max-order: 3

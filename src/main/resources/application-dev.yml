@@ -1,0 +1,22 @@
+micronaut:
+  server:
+    port: ${PORT:5096}
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:postgresql://localhost:5432/authenticationdb`}
+    username: ${DB_USER:`root`}
+    password: ${DB_PASSWORD:`root`}
+    driverClassName: org.postgresql.Driver
+    dialect: POSTGRES
+netty:
+  default:
+    allocator:
+      max-order: 3
