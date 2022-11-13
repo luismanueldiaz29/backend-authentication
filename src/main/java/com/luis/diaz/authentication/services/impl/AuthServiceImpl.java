@@ -3,15 +3,11 @@ package com.luis.diaz.authentication.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.hash.Hashing;
-import com.luis.diaz.authentication.dto.AppUserDto;
-import com.luis.diaz.authentication.dto.PayloadUserDto;
-import com.luis.diaz.authentication.dto.UserTokenDto;
-import com.luis.diaz.authentication.dto.requests.AuthRequest;
-import com.luis.diaz.authentication.dto.responses.TokenResponse;
+import com.luis.diaz.authentication.dto.requests.RefressTokenRequest;
+import com.luis.diaz.authentication.dto.requests.PayloadTokenRequest;
+import com.luis.diaz.authentication.dto.requests.TokenRequest;
+import com.luis.diaz.authentication.dto.responses.AuthResponse;
 import com.luis.diaz.authentication.dto.responses.UserResponse;
-import com.luis.diaz.authentication.infraestructure.entities.User;
-import com.luis.diaz.authentication.infraestructure.repositories.UserRepository;
 import com.luis.diaz.authentication.services.AuthService;
 import com.luis.diaz.authentication.shared.interfaces.JwkConfiguration;
 import com.nimbusds.jose.*;
@@ -28,68 +24,58 @@ import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.DateTimeException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Singleton
 public class AuthServiceImpl implements AuthService {
     private final ObjectMapper objectMapper;
     private final JwkConfiguration jwkConfiguration;
-    private final UserRepository userRepository;
-    private ModelMapper modelMapper;
 
-    public AuthServiceImpl(JwkConfiguration jwkConfiguration, UserRepository userRepository) {
+    public AuthServiceImpl(JwkConfiguration jwkConfiguration) {
         this.jwkConfiguration = jwkConfiguration;
-        this.userRepository = userRepository;
         objectMapper = new ObjectMapper();
-        modelMapper = new ModelMapper();
     }
 
     @Override
-    public TokenResponse login(AuthRequest authRequest) throws JOSEException, DateTimeException, JsonProcessingException {
-        String password = Hashing.sha512().hashString(authRequest.getPassword(), StandardCharsets.UTF_8).toString();
+    public AuthResponse login(UserResponse userResponse) throws JOSEException, DateTimeException, JsonProcessingException {
+        TokenRequest<UserResponse> userResponseTokenRequest = new TokenRequest<>();
+        userResponseTokenRequest.setData(userResponse);
 
-        Optional<User> user = userRepository.findByUsernameAndPassword(authRequest.getUsername(), password);
-
-        UserTokenDto<UserResponse> userToken = new UserTokenDto<>();
-        userToken.setData(convertEntityToResponse(user.get()));
-        return generateToken(userToken, false, false);
+        return generateToken(userResponseTokenRequest, false, false);
     }
 
 
-    public TokenResponse generateToken(UserTokenDto userTokenDto, boolean isRenew, boolean isApp) throws JOSEException, JsonProcessingException {
-        TokenResponse responseToken = new TokenResponse();
+    public AuthResponse generateToken(TokenRequest<?> tokenRequest, boolean isRenew, boolean isApp) throws JOSEException, JsonProcessingException {
+        AuthResponse authResponse = new AuthResponse();
 
         if(!isRenew){
-            responseToken.setAccessToken(returnStringToken(userTokenDto, false, isApp));
-            responseToken.setRefreshToken(returnStringToken(userTokenDto, true, isApp));
+            authResponse.setAccessToken(returnStringToken(tokenRequest, false, isApp));
+            authResponse.setRefreshToken(returnStringToken(tokenRequest, true, isApp));
         }else{
-            responseToken.setAccessToken(returnStringToken(userTokenDto, false, isApp));
+            authResponse.setAccessToken(returnStringToken(tokenRequest, false, isApp));
         }
 
-        return responseToken;
+        return authResponse;
     }
 
-    public String returnStringToken(UserTokenDto userTokenDto, boolean isRefreshToken, boolean isApp)
+    public String returnStringToken(TokenRequest<?> userTokenDto, boolean isRefreshToken, boolean isApp)
             throws JOSEException, JsonProcessingException {
-        UserTokenDto dto = null;
+        TokenRequest dto = null;
         String json = objectMapper.writeValueAsString(userTokenDto.getData());
         JsonNode node = objectMapper.readTree(json);
-        if(isApp == false){
-            PayloadUserDto cruedUserDto = objectMapper.convertValue(node, PayloadUserDto.class);
-            dto = new UserTokenDto<PayloadUserDto>();
+        if(!isApp){
+            PayloadTokenRequest cruedUserDto = objectMapper.convertValue(node, PayloadTokenRequest.class);
+            dto = new TokenRequest<PayloadTokenRequest>();
             dto.setData(cruedUserDto);
         }else {
-            AppUserDto appUserDto = objectMapper.convertValue(node, AppUserDto.class);
-            dto = new UserTokenDto<AppUserDto>();
+            RefressTokenRequest appUserDto = objectMapper.convertValue(node, RefressTokenRequest.class);
+            dto = new TokenRequest<RefressTokenRequest>();
             dto.setData(appUserDto);
         }
 
@@ -130,7 +116,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private String generateAndSignToken(JWKSet jwkSet, UserTokenDto userTokenDto, boolean isRefreshToken)
+    private String generateAndSignToken(JWKSet jwkSet, TokenRequest<?> userTokenDto, boolean isRefreshToken)
             throws JOSEException, DateTimeException, JsonProcessingException {
         Calendar calendar = Calendar.getInstance();
         Date date = new Date();
@@ -180,9 +166,5 @@ public class AuthServiceImpl implements AuthService {
     public String getNameFromToken(String token) throws ParseException {
         JWSObject jwsObject = JWSObject.parse(token);
         return jwsObject.getPayload().toJSONObject().get("sub").toString();
-    }
-
-    private UserResponse convertEntityToResponse(User user){
-        return modelMapper.map(user, UserResponse.class);
     }
 }

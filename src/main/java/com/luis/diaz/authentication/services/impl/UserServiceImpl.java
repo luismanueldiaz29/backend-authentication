@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import javax.validation.ConstraintViolationException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Singleton
@@ -42,6 +43,16 @@ public class UserServiceImpl implements UserService {
             log.info(e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public Optional<UserResponse> findByUsernameAndPassword(String username, String password) {
+        Optional<User> user = userRepository.findByUsernameAndPassword(username, password);
+        if (user.isEmpty()){
+            return Optional.empty();
+        }
+
+        return Optional.of(convertEntityToResponse(user.get()));
     }
 
     private UserResponse convertEntityToResponse(User user){
