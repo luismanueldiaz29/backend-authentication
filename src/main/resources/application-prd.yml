@@ -1,0 +1,41 @@
+micronaut:
+  server:
+    port: ${PORT}
+    idle-timeout: ${IDLE_TIMEOUT}
+    read-idle-timeout: ${IDLE_TIMEOUT}
+    write-idle-timeout: ${IDLE_TIMEOUT}
+    cors:
+      enabled: true
+    netty:
+      access-logger:
+        enabled: true
+        logger-name: web-socket
+        log-format: common
+  security:
+    authentication: bearer
+    endpoints:
+      login:
+        enabled: false
+      health:
+        enabled: true
+    intercept-url-map:
+      - access: isAnonymous()
+        pattern: /health/**
+      - access: isAnonymous()
+        pattern: /keys/**
+---
+jwk:
+  primary: ${JWK_PRIMARY}
+  secondary: ${JWK_SECONDARY}
+  kid: ${KID}
+  kid2: ${KID2}
+  expirationToken: ${JWT_EXPIRATIONS_SECONDS}
+  expirationRefreshToken: ${JWT_EXPIRATIONS_REFRESH_HOURS}
+---
+datasources:
+  default:
+    url: ${JDBC_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driverClassName: org.postgresql.Driver
+    dialect: POSTGRES
