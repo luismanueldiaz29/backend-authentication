@@ -28,6 +28,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.testcontainers:postgresql")
     implementation("io.micronaut:micronaut-validation")
+    implementation("com.google.guava:guava:31.1-jre")
 
     implementation('io.jsonwebtoken:jjwt:0.9.1')
     implementation('javax.xml.bind:jaxb-api:2.4.0-b180830.0359')
