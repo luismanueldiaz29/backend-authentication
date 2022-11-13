@@ -17,4 +17,4 @@ FROM ${PRODUCTION_IMAGE} as production
 ENV APP_PORT=${PORT}
 COPY --from=builder /home/app/build/libs/*-all.jar /home/app/application.jar
 EXPOSE ${APP_PORT}
-CMD ["java", "-Dmicronaut.environments=prod", "-jar", "/home/app/application.jar"]
+CMD ["java", "-Dmicronaut.environments=prd", "-jar", "/home/app/application.jar"]

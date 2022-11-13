@@ -1,15 +1,15 @@
 micronaut:
   server:
     port: ${PORT}
-    idle-timeout: ${IDLE_TIMEOUT}
-    read-idle-timeout: ${IDLE_TIMEOUT}
-    write-idle-timeout: ${IDLE_TIMEOUT}
+#    idle-timeout: ${IDLE_TIMEOUT}
+#    read-idle-timeout: ${IDLE_TIMEOUT}
+#    write-idle-timeout: ${IDLE_TIMEOUT}
     cors:
       enabled: true
     netty:
       access-logger:
         enabled: true
-        logger-name: web-socket
+        logger-name: backend-authentication
         log-format: common
   security:
     authentication: bearer
