@@ -15,5 +15,4 @@ public class UserResponse {
     private String secondName;
     private String lastName;
     private String username;
-    private String password;
 }
