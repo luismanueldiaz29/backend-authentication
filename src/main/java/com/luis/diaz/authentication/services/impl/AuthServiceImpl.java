@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.hash.Hashing;
 import com.luis.diaz.authentication.dto.AppUserDto;
-import com.luis.diaz.authentication.dto.CruedUserDto;
+import com.luis.diaz.authentication.dto.PayloadUserDto;
 import com.luis.diaz.authentication.dto.UserTokenDto;
 import com.luis.diaz.authentication.dto.requests.AuthRequest;
 import com.luis.diaz.authentication.dto.responses.TokenResponse;
@@ -84,8 +84,8 @@ public class AuthServiceImpl implements AuthService {
         String json = objectMapper.writeValueAsString(userTokenDto.getData());
         JsonNode node = objectMapper.readTree(json);
         if(isApp == false){
-            CruedUserDto cruedUserDto = objectMapper.convertValue(node, CruedUserDto.class);
-            dto = new UserTokenDto<CruedUserDto>();
+            PayloadUserDto cruedUserDto = objectMapper.convertValue(node, PayloadUserDto.class);
+            dto = new UserTokenDto<PayloadUserDto>();
             dto.setData(cruedUserDto);
         }else {
             AppUserDto appUserDto = objectMapper.convertValue(node, AppUserDto.class);
