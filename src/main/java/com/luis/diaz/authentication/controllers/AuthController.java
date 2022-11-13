@@ -50,7 +50,7 @@ public class AuthController {
 
         try {
             AuthResponse authResponse = authService.login(userResponse.get());
-            return HttpResponse.badRequest(
+            return HttpResponse.ok(
                     DefaultResponse.<AuthResponse>builder()
                             .error(false)
                             .body(authResponse)

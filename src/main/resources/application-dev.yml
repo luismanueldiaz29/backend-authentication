@@ -18,8 +18,6 @@ micronaut:
       - access: isAnonymous()
         pattern: /health/**
       - access: isAnonymous()
-        pattern: /api/user/**
-      - access: isAnonymous()
         pattern: /api/auth/**
 datasources:
   default:
