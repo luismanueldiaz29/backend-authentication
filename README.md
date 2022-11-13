@@ -1,6 +1,6 @@
 ## Backend Authentication
 
-## Example 
+## Example environment variable file 
 
 ```
 #MS
@@ -22,4 +22,10 @@ DB_PASSWORD=root
 DB_VOLUME_DIR=/home/luis/Documents/kraken-test/authentication
 DB_NAME=authenticationdb
 DB_PORT=5434
+```
+
+## Run with docker
+
+```
+docker compose up --build -d
 ```

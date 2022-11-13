@@ -23,6 +23,8 @@ micronaut:
         pattern: /health/**
       - access: isAnonymous()
         pattern: /keys/**
+      - access: isAnonymous()
+        pattern: /api/user/**
 ---
 jwk:
   primary: ${JWK_PRIMARY}
