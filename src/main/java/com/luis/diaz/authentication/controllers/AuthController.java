@@ -43,7 +43,7 @@ public class AuthController {
         if(userResponse.isEmpty()){
             return HttpResponse.badRequest(
                     DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
-                            .message("Error en el usuario y contraseña suministrado")
+                            .message("Credenciales incorrectas")
                     .build()
             );
         }
