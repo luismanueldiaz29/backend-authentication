@@ -24,7 +24,7 @@ micronaut:
       - access: isAnonymous()
         pattern: /keys/**
       - access: isAnonymous()
-        pattern: /api/user/**
+        pattern: /api/auth/**
 ---
 jwk:
   primary: ${JWK_PRIMARY}
