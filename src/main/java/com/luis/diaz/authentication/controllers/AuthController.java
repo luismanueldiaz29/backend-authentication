@@ -2,7 +2,6 @@ package com.luis.diaz.authentication.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.luis.diaz.authentication.dto.requests.AuthRequest;
-import com.luis.diaz.authentication.dto.responses.AuthResponse;
 import com.luis.diaz.authentication.dto.responses.TokenResponse;
 import com.luis.diaz.authentication.services.AuthService;
 import com.nimbusds.jose.JOSEException;

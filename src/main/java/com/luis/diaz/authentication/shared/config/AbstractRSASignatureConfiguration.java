@@ -26,7 +26,7 @@ public abstract class AbstractRSASignatureConfiguration
     protected final RSAPrivateKey privateKey;
     protected final JWSAlgorithm jwsAlgorithm;
 
-    public AbstractRSASignatureConfiguration(String jsonJwk) {
+    protected AbstractRSASignatureConfiguration(String jsonJwk) {
         RSAKey primaryRSAKey = parseRSAKey(jsonJwk)
                                    .orElseThrow(() -> new ConfigurationException("No se pudo parsear el JWK primario a clave RSA"));
 

@@ -1,7 +1,6 @@
 package com.luis.diaz.authentication.dto.requests;
 
 import io.micronaut.core.annotation.Introspected;
-import io.micronaut.data.annotation.MappedProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
