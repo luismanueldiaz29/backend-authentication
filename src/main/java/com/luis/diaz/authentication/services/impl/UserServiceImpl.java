@@ -55,6 +55,15 @@ public class UserServiceImpl implements UserService {
         return Optional.of(convertEntityToResponse(user.get()));
     }
 
+    @Override
+    public Optional<UserResponse> findByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if(user == null)
+            return Optional.empty();
+
+        return Optional.of(convertEntityToResponse(user));
+    }
+
     private UserResponse convertEntityToResponse(User user){
         return modelMapper.map(user, UserResponse.class);
     }

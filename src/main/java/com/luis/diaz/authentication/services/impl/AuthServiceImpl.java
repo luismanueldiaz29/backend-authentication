@@ -43,11 +43,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(UserResponse userResponse) throws JOSEException, DateTimeException, JsonProcessingException {
+    public AuthResponse login(UserResponse userResponse, boolean isRenew) throws JOSEException, DateTimeException, JsonProcessingException {
         TokenRequest<UserResponse> userResponseTokenRequest = new TokenRequest<>();
         userResponseTokenRequest.setData(userResponse);
 
-        return generateToken(userResponseTokenRequest, false, false);
+        return generateToken(userResponseTokenRequest, isRenew, false);
     }
 
 
@@ -163,8 +163,15 @@ public class AuthServiceImpl implements AuthService {
         return jwsObject.serialize();
     }
 
+    @Override
     public String getNameFromToken(String token) throws ParseException {
         JWSObject jwsObject = JWSObject.parse(token);
         return jwsObject.getPayload().toJSONObject().get("sub").toString();
+    }
+
+    public boolean isTokenRefresh(String token) throws ParseException {
+        JWSObject jwsObject = JWSObject.parse(token);
+        String value = jwsObject.getPayload().toJSONObject().get("refreshToken").toString();
+        return Boolean.getBoolean(value);
     }
 }
