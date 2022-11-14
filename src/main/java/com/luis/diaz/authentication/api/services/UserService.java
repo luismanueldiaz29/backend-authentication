@@ -11,4 +11,7 @@ public interface UserService {
     UserResponse save(UserRequest userRequest);
     Optional<UserResponse> findByUsernameAndPassword(String username, String password);
     Optional<UserResponse> findByUsername(String username);
+    Optional<UserResponse> findById(long id);
+    UserResponse delete(long id);
+    UserResponse update(long id, UserRequest userRequest);
 }

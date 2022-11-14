@@ -64,6 +64,35 @@ public class UserServiceImpl implements UserService {
         return Optional.of(convertEntityToResponse(user));
     }
 
+    @Override
+    public Optional<UserResponse> findById(long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()){
+            return Optional.empty();
+        }
+
+        return Optional.of(convertEntityToResponse(user.get()));
+    }
+
+    @Override
+    public UserResponse delete(long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        userRepository.delete(user);
+        return convertEntityToResponse(user);
+    }
+
+    @Override
+    public UserResponse update(long id, UserRequest userRequest) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setPassword(Hashing.sha512().hashString(userRequest.getPassword(), StandardCharsets.UTF_8).toString());
+        user.setName(userRequest.getName());
+        user.setLastName(userRequest.getLastName());
+        user.setSecondName(userRequest.getSecondName());
+        user.setUsername(userRequest.getUsername());
+
+        return convertEntityToResponse(userRepository.update(user));
+    }
+
     private UserResponse convertEntityToResponse(User user){
         return modelMapper.map(user, UserResponse.class);
     }
