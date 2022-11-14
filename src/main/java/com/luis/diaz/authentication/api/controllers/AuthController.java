@@ -38,6 +38,12 @@ public class AuthController {
         this.userService = userService;
     }
 
+    /**
+     * A login function that receives a username and password and returns a token.
+     *
+     * @param authRequest This is the request body that will be sent to the server.
+     * @return HttpResponse<DefaultResponse<AuthResponse>>
+     */
     @Post("/login")
     public HttpResponse<DefaultResponse<AuthResponse>> login(@Body AuthRequest authRequest){
         String passwordEncrypt = Hashing.sha512().hashString(authRequest.getPassword(), StandardCharsets.UTF_8).toString();
@@ -68,6 +74,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * It takes the refresh token from the request header, validates it, and returns a new access token
+     *
+     * @param httpHeaders This is the header of the request.
+     * @return A response with the new token.
+     */
     @Get("/refresh-token")
     public HttpResponse<DefaultResponse<AuthResponse>> renewToken(HttpHeaders httpHeaders) {
         String authorization = httpHeaders.getAuthorization().orElse(null);

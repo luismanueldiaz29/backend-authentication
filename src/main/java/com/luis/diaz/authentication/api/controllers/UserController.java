@@ -28,6 +28,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * If the list of users is empty, return a 204 response, otherwise return a 200 response with the list of users.
+     *
+     * @return HttpResponse<List<UserResponse>>
+     */
     @Get
     public HttpResponse<List<UserResponse>> findAll(){
         List<UserResponse> users = userService.findAll();
@@ -39,6 +44,12 @@ public class UserController {
         return HttpResponse.ok(users);
     }
 
+    /**
+     * > If the user exists, return a 200 OK response with the user, otherwise return a 204 No Content response
+     *
+     * @param id The id of the user to be retrieved.
+     * @return HttpResponse<UserResponse>
+     */
     @Get("/{id}")
     public HttpResponse<UserResponse> findById(@PathVariable("id") long id){
         Optional<UserResponse> userResponse = userService.findById(id);
@@ -49,6 +60,13 @@ public class UserController {
         return HttpResponse.ok(userResponse.get());
     }
 
+    /**
+     * > If the user exists, return a 200 OK response with the user's information. Otherwise, return a 204 No Content
+     * response
+     *
+     * @param username The username of the user you want to find.
+     * @return HttpResponse<UserResponse>
+     */
     @Get("/username/{username}")
     public HttpResponse<UserResponse> findByUsername(@PathVariable("username") String username){
         Optional<UserResponse> userResponse = userService.findByUsername(username);
@@ -60,6 +78,12 @@ public class UserController {
         return HttpResponse.ok(userResponse.get());
     }
 
+    /**
+     * It saves a user.
+     *
+     * @param userRequest This is the request body that will be sent to the server.
+     * @return HttpResponse<UserResponse>
+     */
     @Post
     public HttpResponse<UserResponse> save(@Body @Valid UserRequest userRequest){
         UserResponse users = userService.save(userRequest);
@@ -71,6 +95,12 @@ public class UserController {
         return HttpResponse.ok(users);
     }
 
+    /**
+     * It deletes a user from the database.
+     *
+     * @param id The id of the user to be deleted.
+     * @return HttpResponse<DefaultResponse<UserResponse>>
+     */
     @Delete("/{id}")
     public HttpResponse<DefaultResponse<UserResponse>> delete(@PathVariable("id") long id){
         Optional<UserResponse> userResponse = userService.findById(id);
@@ -93,6 +123,13 @@ public class UserController {
             .build());
     }
 
+    /**
+     * It updates a user.
+     *
+     * @param id The id of the user to be updated.
+     * @param userRequest The request body.
+     * @return HttpResponse<DefaultResponse<UserResponse>>
+     */
     @Put("/{id}")
     public HttpResponse<DefaultResponse<UserResponse>> update(@PathVariable("id") long id, @Body @Valid UserRequest userRequest){
         Optional<UserResponse> userResponse = userService.findById(id);

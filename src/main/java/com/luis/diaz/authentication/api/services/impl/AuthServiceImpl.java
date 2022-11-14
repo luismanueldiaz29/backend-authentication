@@ -42,6 +42,13 @@ public class AuthServiceImpl implements AuthService {
         objectMapper = new ObjectMapper();
     }
 
+    /**
+     * It generates a token for the user.
+     *
+     * @param userResponse The user object that will be stored in the token.
+     * @param isRenew If the user is already logged in and wants to renew the token, this parameter is set to true.
+     * @return AuthResponse
+     */
     @Override
     public AuthResponse login(UserResponse userResponse, boolean isRenew) throws JOSEException, DateTimeException, JsonProcessingException {
         TokenRequest<UserResponse> userResponseTokenRequest = new TokenRequest<>();
@@ -50,8 +57,42 @@ public class AuthServiceImpl implements AuthService {
         return generateToken(userResponseTokenRequest, isRenew, false);
     }
 
+    /**
+     * It takes a token, parses it, and returns the value of the "sub" field
+     *
+     * @param token The token that you want to parse.
+     * @return The subject of the token.
+     */
+    @Override
+    public String getNameFromToken(String token) throws ParseException {
+        JWSObject jwsObject = JWSObject.parse(token);
+        return jwsObject.getPayload().toJSONObject().get("sub").toString();
+    }
 
-    public AuthResponse generateToken(TokenRequest<?> tokenRequest, boolean isRenew, boolean isApp) throws JOSEException, JsonProcessingException {
+    /**
+     * > If the token is a refresh token, return true
+     *
+     * @param token The token to be verified.
+     * @return A boolean value.
+     */
+    @Override
+    public boolean isTokenRefresh(String token) throws ParseException {
+        JWSObject jwsObject = JWSObject.parse(token);
+        String value = jwsObject.getPayload().toJSONObject().get("refreshToken").toString();
+        log.info("refreshToken -> "+ value);
+        return Boolean.valueOf(value);
+    }
+
+    /**
+     * It takes a token request, a boolean for whether or not it's a renew, and a boolean for whether or not it's an app,
+     * and returns an AuthResponse object with the access token and refresh token
+     *
+     * @param tokenRequest The token request object that contains the user's information.
+     * @param isRenew If the user is renewing the token, then this is true.
+     * @param isApp This is a boolean value that determines if the token is for an app or a user.
+     * @return A token
+     */
+    private AuthResponse generateToken(TokenRequest<?> tokenRequest, boolean isRenew, boolean isApp) throws JOSEException, JsonProcessingException {
         AuthResponse authResponse = new AuthResponse();
 
         if(!isRenew){
@@ -64,7 +105,15 @@ public class AuthServiceImpl implements AuthService {
         return authResponse;
     }
 
-    public String returnStringToken(TokenRequest<?> userTokenDto, boolean isRefreshToken, boolean isApp)
+    /**
+     * It generates a token.
+     *
+     * @param userTokenDto The object that contains the data to be encrypted.
+     * @param isRefreshToken If true, the token will be a refresh token.
+     * @param isApp This is a boolean value that determines whether the token is for an app or a user.
+     * @return A JWT token
+     */
+    private String returnStringToken(TokenRequest<?> userTokenDto, boolean isRefreshToken, boolean isApp)
             throws JOSEException, JsonProcessingException {
         TokenRequest dto = null;
         String json = objectMapper.writeValueAsString(userTokenDto.getData());
@@ -97,6 +146,13 @@ public class AuthServiceImpl implements AuthService {
         return generateAndSignToken(jwkSet, dto, isRefreshToken);
     }
 
+    /**
+     * It takes a JsonNode and a kid and returns a JWK
+     *
+     * @param node The JsonNode object that contains the key information
+     * @param kid Key ID
+     * @return A JWK object
+     */
     private JWK mapKey(JsonNode node, String kid) {
         return new RSAKey.Builder(Base64URL.from(node.get("n")
                 .asText()), Base64URL.from(node
@@ -116,6 +172,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    /**
+     * It takes a JWKSet, a TokenRequest, and a boolean as parameters. It then creates a JWKSource, a
+     * ConfigurableJWSMinter, and a JWSHeader. It then creates a JWTClaimsSet and a JWSObject. It then returns the
+     * serialized JWSObject
+     *
+     * @param jwkSet The JWKSet object that contains the public and private keys.
+     * @param userTokenDto The object that contains the data to be sent to the client.
+     * @param isRefreshToken This is a boolean value that indicates whether the token is a refresh token or not.
+     * @return A JWT token
+     */
     private String generateAndSignToken(JWKSet jwkSet, TokenRequest<?> userTokenDto, boolean isRefreshToken)
             throws JOSEException, DateTimeException, JsonProcessingException {
         Calendar calendar = Calendar.getInstance();
@@ -161,19 +227,5 @@ public class AuthServiceImpl implements AuthService {
         JWSObject jwsObject = minter.mint(header, claimsSet.toPayload(), null);
 
         return jwsObject.serialize();
-    }
-
-    @Override
-    public String getNameFromToken(String token) throws ParseException {
-        JWSObject jwsObject = JWSObject.parse(token);
-        return jwsObject.getPayload().toJSONObject().get("sub").toString();
-    }
-
-    @Override
-    public boolean isTokenRefresh(String token) throws ParseException {
-        JWSObject jwsObject = JWSObject.parse(token);
-        String value = jwsObject.getPayload().toJSONObject().get("refreshToken").toString();
-        log.info("refreshToken -> "+ value);
-        return Boolean.valueOf(value);
     }
 }
