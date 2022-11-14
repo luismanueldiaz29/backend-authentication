@@ -169,9 +169,11 @@ public class AuthServiceImpl implements AuthService {
         return jwsObject.getPayload().toJSONObject().get("sub").toString();
     }
 
+    @Override
     public boolean isTokenRefresh(String token) throws ParseException {
         JWSObject jwsObject = JWSObject.parse(token);
         String value = jwsObject.getPayload().toJSONObject().get("refreshToken").toString();
-        return Boolean.getBoolean(value);
+        log.info("refreshToken -> "+ value);
+        return Boolean.valueOf(value);
     }
 }

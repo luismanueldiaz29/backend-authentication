@@ -13,6 +13,7 @@ import com.nimbusds.jose.JOSEException;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -72,36 +73,39 @@ public class AuthController {
     @Get("/refresh-token")
     public HttpResponse<DefaultResponse<AuthResponse>> renewToken(HttpHeaders httpHeaders) {
         String authorization = httpHeaders.getAuthorization().orElse(null);
-        String username = null;
         if(authorization == null){
             return HttpResponse.badRequest(
-                    DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
-                            .message("Se debe suministrar el refresh token")
-                            .build()
+                DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
+                        .message("Se debe suministrar el refresh token.")
+                        .build()
             );
         }
 
+        String username = null;
         try {
             String token = authorization.substring(7);
             username = authService.getNameFromToken(token);
             if (username == null || username.isEmpty())
                 return HttpResponse.badRequest(DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
-                        .message("El nombre de usuario no puede estar vacío")
+                        .message("El nombre de usuario no puede estar vacío.")
                         .build());
-
+            if(!authService.isTokenRefresh(token)) {
+                return HttpResponse.badRequest(DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
+                        .message("Token suministrado es incorrecto.")
+                        .build());
+            }
         }catch (ParseException e){
             return HttpResponse.badRequest(
-                DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
-                        .message("Ocurrió un error al intentar parsear el token. Asegúrese de que sea un token válido.")
-                        .build());
+                    DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
+                            .message("Ocurrió un error al intentar parsear el token. Asegúrese de que sea un token válido.")
+                            .build());
         }
 
         Optional<UserResponse> optionalAppUser = userService.findByUsername(username);
         if (optionalAppUser.isEmpty())
             return HttpResponse.badRequest(DefaultResponse.<AuthResponse>builder().error(true).body(null).statusCode(HttpStatus.BAD_REQUEST.getCode())
-                    .message("Nombre de usuario incorrecto.")
-                    .build());
-
+                .message("Nombre de usuario incorrecto.")
+                .build());
         try {
             AuthResponse responseToken = authService.login(optionalAppUser.get(), true);
             return HttpResponse.ok(
@@ -115,7 +119,5 @@ public class AuthController {
                         .build());
         }
     }
-
-
 
 }
