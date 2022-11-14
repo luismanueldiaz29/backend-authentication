@@ -11,10 +11,13 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Secured(SecurityRule.IS_ANONYMOUS)
 @ExecuteOn(TaskExecutors.IO)
 @Controller("/api/user")
 @Tag(name = "User")
