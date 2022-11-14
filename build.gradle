@@ -4,7 +4,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.luis.diaz.authentication"
+group = "com.luis.diaz.authentication.api"
 
 repositories {
     mavenCentral()
@@ -42,7 +42,7 @@ dependencies {
 
 
 application {
-    mainClass.set("com.luis.diaz.authentication.Application")
+    mainClass.set("com.luis.diaz.authentication.api.Application")
 }
 
 java {
@@ -56,7 +56,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.luis.diaz.authentication.*")
+        annotations("com.luis.diaz.authentication.api.*")
     }
 }
 
