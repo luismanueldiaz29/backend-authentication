@@ -24,6 +24,12 @@ DB_NAME=authenticationdb
 DB_PORT=5434
 ```
 
+## Create network
+
+```
+docker network create parking
+```
+
 ## Run with docker
 
 ```
