@@ -21,7 +21,7 @@ micronaut:
         pattern: /api/auth/**
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:postgresql://localhost:5432/authenticationdb`}
+    url: ${JDBC_URL:`jdbc:postgresql://localhost:5434/authenticationdb`}
     username: ${DB_USER:`root`}
     password: ${DB_PASSWORD:`root`}
     driverClassName: org.postgresql.Driver

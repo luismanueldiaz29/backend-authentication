@@ -129,10 +129,9 @@ public class UserServiceImpl implements UserService {
     public UserResponse update(long id, UserRequest userRequest) {
         User user = userRepository.findById(id).orElseThrow();
         user.setPassword(Hashing.sha512().hashString(userRequest.getPassword(), StandardCharsets.UTF_8).toString());
-        user.setName(userRequest.getName());
-        user.setLastName(userRequest.getLastName());
-        user.setSecondName(userRequest.getSecondName());
         user.setUsername(userRequest.getUsername());
+        user.setUserType(userRequest.getUserType());
+        user.setEmail(userRequest.getEmail());
 
         return convertEntityToResponse(userRepository.update(user));
     }

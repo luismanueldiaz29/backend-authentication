@@ -1,6 +1,7 @@
 package com.luis.diaz.authentication.api.dto.requests;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.data.annotation.MappedProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,18 +17,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequest {
-
-    @NotNull(message = "El nombre del usuario es requerido")
-    @NotBlank(message = "Al nombre del usuario se le debe asignar un valor")
-    private String name;
-
-    @Nullable
-    private String secondName;
-
-    @NotNull(message = "El apellido del usuario es requerido")
-    @NotBlank(message = "Al apellido del usuario se le debe asignar un valor")
-    private String lastName;
-
     @NotNull(message = "El usuario es requerido")
     @NotBlank(message = "El usuario se le debe asignar un valor")
     private String username;
@@ -36,4 +25,9 @@ public class UserRequest {
     @NotBlank(message = "A la contraseña se le debe asignar un valor")
     private String password;
 
+    private String userType;
+
+    @NotNull(message = "El correo del usuario es requerido")
+    @NotBlank(message = "El correo del usuario se le debe asignar un valor")
+    private String email;
 }

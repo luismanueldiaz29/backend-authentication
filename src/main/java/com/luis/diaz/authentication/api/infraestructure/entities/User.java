@@ -14,33 +14,28 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedEntity(value = "users")
+@MappedEntity(value = "usuarios")
 public class User {
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
-    @MappedProperty(value = "id")
+    @MappedProperty(value = "usuario_id")
     private long id;
 
-    @MappedProperty(value = "name")
-    @NotNull(message = "El nombre del usuario es requerido")
-    @NotBlank(message = "Al nombre del usuario se le debe asignar un valor")
-    private String name;
-
-    @MappedProperty(value = "second_name")
-    private String secondName;
-
-    @MappedProperty(value = "last_name")
-    @NotNull(message = "El apellido del usuario es requerido")
-    @NotBlank(message = "Al apellido del usuario se le debe asignar un valor")
-    private String lastName;
-
-    @MappedProperty(value = "username")
+    @MappedProperty(value = "usuario")
     @NotNull(message = "El usuario es requerido")
     @NotBlank(message = "El usuario se le debe asignar un valor")
     private String username;
 
-    @MappedProperty(value = "password")
+    @MappedProperty(value = "clave")
     @NotNull(message = "La contraseña es requerido")
     @NotBlank(message = "A la contraseña se le debe asignar un valor")
     private String password;
+
+    @MappedProperty(value = "tipo_usuario")
+    private String userType;
+
+    @MappedProperty(value = "email")
+    @NotNull(message = "El correo del usuario es requerido")
+    @NotBlank(message = "El correo del usuario se le debe asignar un valor")
+    private String email;
 }
