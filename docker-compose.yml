@@ -11,7 +11,7 @@ services:
     depends_on:
       - postgres-authentication
     networks:
-      - parking
+      - fruitvalle
     environment:
       PORT: ${PORT}
       JDBC_URL: ${JDBC_URL}
@@ -32,7 +32,7 @@ services:
       - ${DB_VOLUME_DIR}:/var/lib/postgresql/
     restart: always
     networks:
-      - parking
+      - fruitvalle
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -41,5 +41,5 @@ services:
       - "${DB_PORT}:5432"
 
 networks:
-  parking:
+  fruitvalle:
     external: true
