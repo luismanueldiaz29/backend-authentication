@@ -1,6 +1,8 @@
 micronaut:
   server:
     port: ${PORT:5096}
+    cors:
+      enabled: true
   router:
     static-resources:
       swagger:
