@@ -32,10 +32,28 @@ public class User {
     private String password;
 
     @MappedProperty(value = "tipo_usuario")
+    @NotNull(message = "El tipo de usuario es requerido")
+    @NotBlank(message = "El tipo de usuario se le debe asignar un valor")
     private String userType;
 
     @MappedProperty(value = "email")
     @NotNull(message = "El correo del usuario es requerido")
     @NotBlank(message = "El correo del usuario se le debe asignar un valor")
     private String email;
+
+    @MappedProperty(value = "nombre")
+    @NotNull(message = "El nombre es requerido")
+    @NotBlank(message = "El nombre se le debe asignar un valor")
+    private String name;
+
+    @MappedProperty(value = "apellido")
+    @NotNull(message = "El apellido es requerido")
+    @NotBlank(message = "El apellido se le debe asignar un valor")
+    private String lastname;
+
+    @MappedProperty(value = "cargo")
+    private String position;
+
+    @MappedProperty(value = "telefono")
+    private String phone;
 }

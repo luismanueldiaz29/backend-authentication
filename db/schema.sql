@@ -22,8 +22,12 @@ create table usuarios
     usuario      varchar(255) not null,
     clave        varchar(255) not null,
     tipo_usuario varchar(50)  not null,
-    email        varchar(255)
+    email        varchar(255) not null,
+    nombre       varchar(255) not null,
+    cargo        varchar(255),
+    telefono     varchar(255),
+    apellido     varchar(255) not null
 );
 
-insert into usuarios ( usuario, clave, tipo_usuario, email)
-values ('admin@admin','d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db','CLIENTE','admin@gmail.com')
+insert into usuarios ( usuario, clave, tipo_usuario, email, nombre, apellido)
+values ('admin@admin','d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db','CLIENTE','admin@gmail.com', 'admin', 'admin')

@@ -3,6 +3,7 @@ package com.luis.diaz.authentication.api.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.luis.diaz.authentication.api.dto.requests.PayloadTokenRequest;
 import com.luis.diaz.authentication.api.dto.requests.RefressTokenRequest;
 import com.luis.diaz.authentication.api.dto.requests.TokenRequest;
@@ -40,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(JwkConfiguration jwkConfiguration) {
         this.jwkConfiguration = jwkConfiguration;
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     /**
