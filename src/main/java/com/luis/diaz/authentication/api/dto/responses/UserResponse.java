@@ -1,14 +1,18 @@
 package com.luis.diaz.authentication.api.dto.responses;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.ALWAYS;
+
 @Data
 @Builder
-@AllArgsConstructor
+@JsonInclude(ALWAYS)
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
     private long id;
     private String username;
